@@ -220,6 +220,10 @@ button:focus {
   background: #4A9CEC;
 }
 
+.social-icon li .github:hover {
+  background: rgb(190, 2, 247);
+}
+
 .social-icon li .instagram:hover {
   background: #D6274D;
 }
