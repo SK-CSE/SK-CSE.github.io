@@ -174,22 +174,17 @@
 
 .about-grid { margin-top: 28px; grid-template-columns: .76fr 1.24fr; gap: 62px; }
 .about-art { height: 320px; }
-.monogram-art > span { font-size: 190px; }
+.monogram-art > span { font-size: 160px; }
 .about-copy .section-heading { font-size: 39px; margin-bottom: 18px; }
 .about-copy > p { font-size: 12px; margin-bottom: 11px; line-height: 1.8; }
-.about-copy .about-signoff { margin-top: 13px; font-size: 21px; }
+.about-copy .about-signoff { margin-top: 13px; font-size: 16px; line-height: 1.7; }
 .about-facts { margin-top: 18px; padding-top: 15px; }
 .about-facts > div > strong { font-size: 26px; }
 .toolbox { margin-top: 28px; padding-block: 21px; }
-.notes { padding-bottom: 54px; gap: 62px; grid-template-columns: .76fr 1.24fr; }
-.notes-intro h2 { font-size: 31px; }
-.notes-intro .eyebrow { margin-bottom: 15px; }
-.notes-intro > p:last-child { font-size: 11px; margin-top: 13px; max-width: 350px; }
-.notes-link { padding-block: 29px; }
 .contact { padding-block: 44px; }
 .contact h2 { font-size: clamp(38px, 3.8vw, 54px); margin-top: 22px; }
 .contact-bottom { margin-top: 28px; padding-top: 22px; }
-.contact-star { font-size: 39px; }
+.contact-mark { font-size: 39px; }
 .site-footer { padding-block: 23px; }
 
 @media (max-width: 1100px) {
@@ -209,7 +204,7 @@
   .approach-tabs button { font-size: 10px; }
   .approach-tabs button > span { font-size: 7px; margin-right: 4px; }
   .story-chapter h3 { font-size: 25px; }
-  .about-grid, .notes { gap: 40px; }
+  .about-grid { gap: 40px; }
   .about-copy .section-heading { font-size: 34px; }
   .toolbox { padding-block: 19px; gap: 15px; }
 }
@@ -308,7 +303,7 @@
   .ai-input { font-size: 6px; }
   .ai-engine { padding-block: 10px; }
   .ai-checks { font-size: 6px; margin-top: 14px; }
-  .ai-star { font-size: 28px; }
+  .ai-mark { font-size: 28px; }
   .project-content { padding: 22px; }
   .project-content h3 { font-size: 26px; }
   .project-content p { font-size: 12px; }
@@ -318,8 +313,7 @@
   .about-grid { grid-template-columns: 1fr; gap: 25px; margin-top: 24px; }
   .about-art { height: 145px; max-width: none; }
   .monogram-art { inset: 0; }
-  .monogram-art > span { font-size: 115px; letter-spacing: -10px; }
-  .monogram-art > span:nth-child(2) { margin-top: 25px; margin-left: -10px; }
+  .monogram-art > span { font-size: 100px; }
   .monogram-art > i { width: 5px; height: 5px; top: 30%; left: 65%; }
   .monogram-orbit { width: 50%; height: 75%; }
   .about-art-top { top: 13px; left: 16px; right: 16px; font-size: 4px; }
@@ -328,13 +322,6 @@
   .about-copy > p { font-size: 13px; line-height: 1.8; }
   .about-facts { gap: 35px; }
   .toolbox { margin-top: 24px; gap: 16px; }
-  .toolbox > div { gap: 14px; font-size: 10px; }
-  .notes { grid-template-columns: 1fr; padding-bottom: 40px; gap: 22px; }
-  .notes-intro h2 { font-size: 32px; }
-  .notes-intro h2 br { display: none; }
-  .notes-intro h2 em { margin-left: 6px; }
-  .notes-intro > p:last-child { font-size: 12px; }
-  .notes-link { padding-block: 21px; }
   .contact h2 { font-size: clamp(32px, 7.5vw, 46px); }
   .contact-bottom { margin-top: 23px; }
   .site-footer { padding-block: 22px; }
@@ -342,6 +329,7 @@
 
 @media (max-width: 380px) {
   .hero h1 { font-size: 60px; }
+  .hero h1 em { font-size: .72em; }
   .scene-stage { height: 250px; }
   .workspace-heading strong { font-size: 10px; }
   .blueprint { height: 85px; }

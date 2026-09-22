@@ -221,23 +221,3 @@ document.querySelectorAll('[data-project]').forEach(button => {
 document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
 dialog.addEventListener('close', () => { document.body.classList.remove('modal-open'); dialogTrigger?.focus({ preventScroll: true }); });
-
-const copyButton = document.querySelector('.copy-email');
-let copyTimeout;
-copyButton.addEventListener('click', async () => {
-  clearTimeout(copyTimeout);
-  try {
-    await navigator.clipboard.writeText('saurabh.cse04@gmail.com');
-    document.querySelector('.copy-label').textContent = 'Copied!';
-    document.querySelector('#copy-status').textContent = 'Email address copied to clipboard.';
-  } catch {
-    document.querySelector('.copy-label').textContent = 'Select email to copy';
-    document.querySelector('#copy-status').textContent = 'Clipboard access is unavailable. You can select and copy the email address shown beside this button.';
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(document.querySelector('.contact-email').firstChild);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-  copyTimeout = setTimeout(() => { document.querySelector('.copy-label').textContent = 'Copy email'; }, 3000);
-});
