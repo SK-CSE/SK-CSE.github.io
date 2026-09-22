@@ -1,3 +1,5 @@
+import { getSceneFrame, getEntryFrame, getApproachStage } from './motion.js';
+
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const menuButton = document.querySelector('.menu-toggle');
 const mobileNav = document.querySelector('#mobile-nav');
@@ -54,9 +56,29 @@ const diagram = document.querySelector('.system-diagram');
 const navLinks = [...document.querySelectorAll('.desktop-nav a')];
 const navSections = navLinks.map(link => document.querySelector(link.getAttribute('href')));
 const progress = document.querySelector('.reading-progress');
-const artwork = document.querySelector('.architecture-svg');
+const scene = document.querySelector('.scene-stage');
+const hero = document.querySelector('.hero');
+const cards = [...document.querySelectorAll('.project-card')];
+const approachTabs = [...document.querySelectorAll('.approach-tabs [role="tab"]')];
+const approach = document.querySelector('.approach');
+const approachTrack = document.querySelector('.approach-scroll-track');
+const approachLayout = document.querySelector('.story-layout');
 let currentStage = -1;
 let scrollScheduled = false;
+let selectedByUser = false;
+let manualScrollPosition = window.scrollY;
+
+function selectApproachTab(index) {
+  selectedByUser = true;
+  manualScrollPosition = window.scrollY;
+  activateStage(index);
+}
+
+function configureApproachScroll() {
+  approach.classList.toggle('scroll-approach', !reducedMotion.matches);
+  approachTrack.style.setProperty('--panel-height', `${approachLayout.offsetHeight}px`);
+  document.querySelector('.approach-instructions').hidden = reducedMotion.matches;
+}
 
 function activateStage(index) {
   if (currentStage === index) return;
@@ -68,18 +90,63 @@ function activateStage(index) {
   diagram.querySelectorAll('.node-label').forEach((label, i) => { label.textContent = storyStages[index].nodes[i]; });
   document.querySelectorAll('.diagram-dots i').forEach((dot, i) => dot.classList.toggle('active', i === index));
   chapters.forEach((chapter, i) => chapter.classList.toggle('is-active', i === index));
+  chapters.forEach((chapter, i) => { chapter.hidden = i !== index; });
+  approachTabs.forEach((tab, i) => {
+    tab.setAttribute('aria-selected', String(i === index));
+    tab.tabIndex = i === index ? 0 : -1;
+  });
 }
+
+document.querySelector('.approach-tabs').hidden = false;
+document.querySelector('.approach').classList.add('approach-interactive');
+chapters.forEach((chapter, i) => {
+  chapter.setAttribute('role', 'tabpanel');
+  chapter.setAttribute('aria-labelledby', `approach-tab-${i}`);
+  chapter.tabIndex = 0;
+});
+approachTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => selectApproachTab(index));
+  tab.addEventListener('keydown', event => {
+    let next;
+    if (event.key === 'ArrowRight') next = (index + 1) % approachTabs.length;
+    else if (event.key === 'ArrowLeft') next = (index - 1 + approachTabs.length) % approachTabs.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = approachTabs.length - 1;
+    else return;
+    event.preventDefault();
+    selectApproachTab(next);
+    approachTabs[next].focus({ preventScroll: true });
+  });
+});
+activateStage(0);
+configureApproachScroll();
+if ('ResizeObserver' in window) new ResizeObserver(configureApproachScroll).observe(approachLayout);
 
 function updateScroll() {
   scrollScheduled = false;
   const page = document.documentElement;
   const total = page.scrollHeight - window.innerHeight;
   progress.style.transform = `scaleX(${total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0})`;
-  if (!reducedMotion.matches && window.scrollY < window.innerHeight) artwork.style.setProperty('--art-y', `${Math.min(28, window.scrollY * 0.06)}px`);
-  const readingPoint = window.innerWidth <= 700 ? Math.max(window.innerHeight * 0.66, 420) : window.innerHeight * 0.52;
-  let stage = 0;
-  for (let i = 0; i < chapters.length; i++) if (chapters[i].getBoundingClientRect().top <= readingPoint) stage = i;
-  activateStage(stage);
+  const heroOffset = Math.max(0, -hero.getBoundingClientRect().top);
+  const frame = getSceneFrame(heroOffset, window.innerHeight, reducedMotion.matches);
+  scene.style.setProperty('--scene-x', `${frame.rotateX.toFixed(2)}deg`);
+  scene.style.setProperty('--scene-y', `${frame.rotateY.toFixed(2)}deg`);
+  scene.style.setProperty('--scene-z', `${frame.rotateZ.toFixed(2)}deg`);
+  scene.style.setProperty('--scene-scale', frame.scale.toFixed(3));
+  scene.style.setProperty('--scene-spread', frame.spread.toFixed(3));
+  for (const card of cards) {
+    const entry = getEntryFrame(card.getBoundingClientRect().top, window.innerHeight, reducedMotion.matches);
+    card.style.setProperty('--entry-x', `${entry.rotateX.toFixed(2)}deg`);
+    card.style.setProperty('--entry-y', `${entry.offset.toFixed(2)}px`);
+  }
+  if (!reducedMotion.matches) {
+    const distance = parseFloat(getComputedStyle(approachTrack).getPropertyValue('--tab-scroll-distance')) || 240;
+    const stickyTop = parseFloat(getComputedStyle(approachLayout).top) || 0;
+    const scrollStage = getApproachStage(approachTrack.getBoundingClientRect().top, stickyTop, distance, chapters.length);
+    const focusedPanel = chapters.some(panel => panel.contains(document.activeElement));
+    if (selectedByUser && Math.abs(window.scrollY - manualScrollPosition) > 32) selectedByUser = false;
+    if (scrollStage !== currentStage && !selectedByUser && !focusedPanel) activateStage(scrollStage);
+  }
   let selected = -1;
   navSections.forEach((section, i) => {
     const rect = section.getBoundingClientRect();
@@ -94,6 +161,7 @@ function scheduleScroll() { if (!scrollScheduled) { scrollScheduled = true; requ
 window.addEventListener('scroll', scheduleScroll, { passive: true });
 window.addEventListener('resize', scheduleScroll, { passive: true });
 window.addEventListener('load', scheduleScroll);
+reducedMotion.addEventListener('change', () => { configureApproachScroll(); scheduleScroll(); });
 updateScroll();
 
 const caseStudies = {

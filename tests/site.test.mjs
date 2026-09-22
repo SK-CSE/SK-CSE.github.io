@@ -15,7 +15,7 @@ test('homepage serves successfully with query parameters', async () => {
   assert.match(response.body, /Clarity in/);
 });
 test('styles and scripts are served with browser-compatible MIME types', async () => {
-  for (const [path, mime] of [['/styles.css', 'text/css'], ['/app.js', 'text/javascript'], ['/assets/favicon.svg', 'image/svg+xml']]) {
+  for (const [path, mime] of [['/styles.css', 'text/css'], ['/compact.css', 'text/css'], ['/app.js', 'text/javascript'], ['/motion.js', 'text/javascript'], ['/assets/favicon.svg', 'image/svg+xml']]) {
     const response = await get(path);
     assert.equal(response.status, 200);
     assert.ok(response.headers['content-type'].startsWith(mime));

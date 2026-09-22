@@ -23,7 +23,9 @@ The build copies the static site into `dist/`. The root files also work directly
 
 - `index.html`: identity, homepage copy, links, and illustrations.
 - `styles.css`: responsive layout, navy/blue palette, animation, reduced-motion and print styles.
-- `app.js`: scrolling narrative, navigation, case-study dialogs, and email copy feedback.
+- `compact.css`: compact spacing, perspective workspace, project entrances, and tabbed approach layout.
+- `app.js`: scroll-linked and keyboard-accessible tabs, navigation, case-study dialogs, and email copy feedback.
+- `motion.js`: bounded animation calculations, also exercised directly by the unit tests.
 - `assets/favicon.svg`: vector monogram.
 - `scripts/`: dependency-free preview server and static build.
 
@@ -42,7 +44,10 @@ Update the `og:url` if publishing somewhere other than `https://sk-cse.github.io
 ## Interaction and accessibility
 
 - Native scrolling, anchor navigation, and a scroll-position reading indicator.
-- A sticky diagram updates with the three narrative chapters, without hijacking scrolling.
+- A 3D architecture workspace settles into a front-facing view during the natural hero scroll. The project cards straighten as they enter the viewport.
+- The approach shares one panel between three perspectives. A short sticky sequence advances the tabs and diagram over 240 pixels of desktop scrolling or 180 pixels on phones; scrolling back reverses it. Clicks and arrow/Home/End keys also select tabs.
+- Manually selected tabs remain selected until scrolling resumes. Content containing keyboard focus is never automatically hidden.
+- Reduced motion disables the automatic sequence and pinning, keeps the direct tab controls, and settles all decorative transforms. Without JavaScript, all three chapters are visible. Printing also includes all three chapters.
 - Decorative animations and reveals respect `prefers-reduced-motion`; core copy is visible without JavaScript.
 - Keyboard-accessible mobile navigation and native dialogs, with Escape dismissal and restored focus.
 - Email remains a working `mailto:` link even when clipboard permission is denied.
@@ -52,3 +57,9 @@ The static server is a local preview tool and binds only to loopback. Use a stat
 ## Branch convention
 
 Use `feature/…` or another user-approved prefix. Never use `codex/` in branch names.
+
+## Design versions
+
+The initial blue redesign is saved on `feature/engineering-leader-redesign` at `bcc7973`. The compact animation experiment is on `feature/compact-scroll-experiment`.
+
+The perspective motion takes inspiration from [Framer University's Fey resource](https://framer.university/resources/fey-website-in-framer), implemented here with original HTML/SVG artwork and native browser transforms. No Framer runtime, copied product images, or animation dependencies are used.
