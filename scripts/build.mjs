@@ -1,0 +1,8 @@
+import { mkdir, copyFile, cp } from 'node:fs/promises';
+const root = new URL('../', import.meta.url);
+await mkdir(new URL('dist/', root), { recursive: true });
+for (const file of ['index.html', 'styles.css', 'compact.css', 'app.js', 'motion.js', '.nojekyll']) {
+  await copyFile(new URL(file, root), new URL(`dist/${file}`, root));
+}
+await cp(new URL('assets/', root), new URL('dist/assets/', root), { recursive: true });
+console.log('Built static portfolio in dist/');
